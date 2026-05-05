@@ -1,0 +1,27 @@
+{
+  "name": "@unmiri/ngs-interpretation-types",
+  "version": "0.1.0",
+  "description": "TypeScript types for the UNMIRI cross-vendor NGS interpretation API contract.",
+  "license": "Apache-2.0",
+  "main": "index.ts",
+  "types": "index.ts",
+  "files": ["index.ts", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unmiri/unmiri-ngs-fhir-schema"
+  },
+  "homepage": "https://unmiri.com",
+  "keywords": [
+    "ngs",
+    "oncology",
+    "fhir",
+    "fhir-genomics",
+    "clinical-genomics",
+    "precision-oncology",
+    "cdx",
+    "companion-diagnostic"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/specimen.schema.json",
+  "title": "Specimen",
+  "description": "Tumor-type and specimen context for a single NGS interpretation response. Aligns with the FHIR R5 Specimen resource and FHIR Genomics Specimen profile, retaining only fields that travel with a vendor report and are needed for downstream interpretation. Patient identifiers are out of scope: the interpretation pipeline is stateless, not a record store.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specimenType", "primaryTumorSite"],
+  "properties": {
+    "specimenId": {
+      "type": ["string", "null"],
+      "description": "Vendor-issued specimen identifier (lab accession, kit ID). Opaque to the pipeline."
+    },
+    "specimenType": {
+      "type": "string",
+      "enum": [
+        "ffpe-tumor-tissue",
+        "fresh-frozen-tumor-tissue",
+        "blood-plasma-cfdna",
+        "blood-whole",
+        "saliva",
+        "bone-marrow-aspirate",
+        "fine-needle-aspirate",
+        "fluid-other",
+        "other"
+      ],
+      "description": "Specimen substrate. FFPE is the dominant tissue substrate for solid tumor CGP; cfDNA from plasma is the dominant liquid biopsy substrate."
+    },
+    "primaryTumorSite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display"],
+      "description": "Anatomical site of the primary tumor. The contract prefers SNOMED CT but accepts ICD-O-3 topography or a free-text display when a code is not available in the source report.",
+      "properties": {
+        "snomedCode": {
+          "type": ["string", "null"],
+          "description": "SNOMED CT concept ID for the tumor site (e.g., '39607008' for lung structure)."
+        },
+        "icdo3Topography": {
+          "type": ["string", "null"],
+          "pattern": "^C\\d{2}(\\.\\d)?$",
+          "description": "ICD-O-3 topography code (e.g., 'C34.1' upper lobe lung)."
+        },
+        "display": {
+          "type": "string",
+          "description": "Human-readable tumor site label (e.g., 'Lung, upper lobe'; 'Endometrium')."
+        }
+      }
+    },
+    "histology": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Histologic diagnosis. ICD-O-3 morphology is preferred; SNOMED CT is acceptable when the source report does not carry an ICD-O code.",
+      "properties": {
+        "icdo3Morphology": {
+          "type": ["string", "null"],
+          "pattern": "^\\d{4}/\\d$",
+          "description": "ICD-O-3 morphology/behavior code (e.g., '8140/3' for adenocarcinoma NOS)."
+        },
+        "snomedCode": {
+          "type": ["string", "null"],
+          "description": "Optional SNOMED CT code for the histologic diagnosis."
+        },
+        "display": {
+          "type": "string",
+          "description": "Human-readable histology label (e.g., 'Lung adenocarcinoma'; 'Invasive mammary carcinoma'; 'Endometrioid carcinoma NOS')."
+        }
+      }
+    },
+    "specimenSite": {
+      "type": ["string", "null"],
+      "description": "Where the specimen itself was collected, when different from the primary tumor site (e.g., metastasis biopsy: 'Liver' for a pancreas primary)."
+    },
+    "collectionDate": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "ISO 8601 date when the specimen was collected from the patient."
+    },
+    "receivedDate": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "ISO 8601 date when the lab received the specimen."
+    },
+    "tumorContent": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Estimated tumor cellularity of the specimen as a percentage (0–100). Drives confidence in low-VAF variant calls."
+    },
+    "ctdnaTumorFraction": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Liquid biopsy: estimated fraction of plasma cell-free DNA derived from tumor. High tumor fraction reduces the false-negative risk of liquid-biopsy variant calls.",
+      "properties": {
+        "value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "interpretation": {
+          "type": "string",
+          "enum": ["low", "intermediate", "high", "indeterminate"]
+        }
+      },
+      "required": ["interpretation"]
+    }
+  }
+}

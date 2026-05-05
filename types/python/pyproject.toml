@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "unmiri-ngs-interpretation"
+version = "0.1.0"
+description = "Pydantic v2 models for the UNMIRI cross-vendor NGS interpretation API contract."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "UNMIRI LLC", email = "open-source@unmiri.com" },
+]
+keywords = [
+    "ngs",
+    "oncology",
+    "fhir",
+    "fhir-genomics",
+    "clinical-genomics",
+    "precision-oncology",
+    "cdx",
+    "companion-diagnostic",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = [
+    "pydantic>=2.5",
+]
+
+[project.urls]
+Homepage = "https://unmiri.com"
+Repository = "https://github.com/unmiri/unmiri-ngs-fhir-schema"
+Issues = "https://github.com/unmiri/unmiri-ngs-fhir-schema/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["unmiri_ngs_interpretation"]

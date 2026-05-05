@@ -1,0 +1,20 @@
+unmiri-ngs-fhir-schema
+Copyright 2026 UNMIRI LLC
+
+This product includes software developed by UNMIRI LLC
+(https://unmiri.com).
+
+The schemas in this repository are designed to align with the HL7 FHIR®
+Genomics Implementation Guide and reference clinical evidence levels
+defined by the AMP/ASCO/CAP somatic variant interpretation guidelines
+(Li MM et al., J Mol Diagn 2017).
+
+Implementations that integrate proprietary or third-party knowledge bases
+(OncoKB, COSMIC, CIViC, NCCN, others) are responsible for their own
+licensing, citation, and attribution obligations under the terms of those
+sources. The open-source schema does not relicense or distribute content
+from any of those bases; it provides an `evidence.externalLevels` extension
+point for licensed implementations to populate.
+
+FHIR® is a registered trademark of HL7. This project is not endorsed by
+or affiliated with HL7 International.

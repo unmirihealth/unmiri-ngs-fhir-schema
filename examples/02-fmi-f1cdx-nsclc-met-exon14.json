@@ -1,0 +1,196 @@
+{
+  "audit": {
+    "responseId": "11111111-1111-4111-8111-111111111102",
+    "generatedAt": "2026-05-04T16:00:00Z",
+    "engineVersion": "0.4.0",
+    "schemaVersion": "0.1.0",
+    "vendorSource": {
+      "vendor": "Foundation Medicine",
+      "product": "FoundationOne CDx",
+      "reportFormat": "pdf",
+      "receivedAt": "2026-05-04T15:55:00Z"
+    },
+    "knowledgeBases": [
+      {
+        "name": "ClinVar",
+        "version": "2026-04-01",
+        "refreshedAt": "2026-04-01T00:00:00Z"
+      },
+      {
+        "name": "ClinicalTrials.gov",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      },
+      {
+        "name": "openFDA",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      }
+    ],
+    "watermark": "Synthetic data \u2014 demonstration only"
+  },
+  "specimen": {
+    "specimenType": "ffpe-tumor-tissue",
+    "primaryTumorSite": {
+      "snomedCode": "39607008",
+      "icdo3Topography": "C34.9",
+      "display": "Lung, NOS"
+    },
+    "histology": {
+      "display": "Non-small cell lung carcinoma (NOS)"
+    },
+    "tumorContent": 50
+  },
+  "variants": [
+    {
+      "variantId": "22222222-2222-4222-8222-222222222203",
+      "gene": {
+        "symbol": "MET",
+        "hgncId": "HGNC:7029"
+      },
+      "transcript": "NM_000245.3",
+      "hgvsCoding": "NM_000245.3:c.3028+1G>T",
+      "variantType": "splice",
+      "molecularConsequence": "splice_donor_variant",
+      "functionalEffect": "gain-of-function",
+      "variantAlleleFraction": 0.38,
+      "exon": 14,
+      "germlineOrSomatic": "somatic",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      }
+    },
+    {
+      "variantId": "22222222-2222-4222-8222-222222222204",
+      "gene": {
+        "symbol": "TP53",
+        "hgncId": "HGNC:11998"
+      },
+      "transcript": "NM_000546.6",
+      "hgvsProtein": "p.R273H",
+      "variantType": "snv",
+      "molecularConsequence": "missense_variant",
+      "functionalEffect": "loss-of-function",
+      "variantAlleleFraction": 0.42,
+      "germlineOrSomatic": "somatic",
+      "clinicalSignificance": "pathogenic",
+      "evidence": {
+        "ampAscoCapTier": "III"
+      }
+    }
+  ],
+  "biomarkers": [
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333303",
+      "type": "tmb",
+      "loincCode": "94076-7",
+      "method": "ngs",
+      "value": 7,
+      "unit": "mut/Mb",
+      "interpretation": "intermediate",
+      "threshold": {
+        "value": 10,
+        "operator": "gte",
+        "unit": "mut/Mb"
+      }
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333304",
+      "type": "msi",
+      "loincCode": "81695-9",
+      "method": "ngs",
+      "interpretation": "stable",
+      "value": "MS-Stable"
+    }
+  ],
+  "cdxFlags": [
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444402",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222203"
+        }
+      ],
+      "drug": {
+        "name": "capmatinib",
+        "rxNormCui": "2374687",
+        "atcCode": "L01EX26"
+      },
+      "indication": {
+        "tumorType": "Metastatic non-small cell lung cancer with MET exon 14 skipping",
+        "line": "any-line"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2020-05-06",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      },
+      "citations": [
+        {
+          "citation": "FDA-approved labeling for capmatinib in MET exon 14 skipping NSCLC.",
+          "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2022/213591s007lbl.pdf",
+          "knowledgeBase": "openFDA"
+        }
+      ]
+    },
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444411",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222203"
+        }
+      ],
+      "drug": {
+        "name": "tepotinib",
+        "rxNormCui": "2470290",
+        "atcCode": "L01EX21"
+      },
+      "indication": {
+        "tumorType": "Metastatic non-small cell lung cancer with MET exon 14 skipping",
+        "line": "any-line"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2021-02-03",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      }
+    }
+  ],
+  "trialMatches": [
+    {
+      "trialMatchId": "55555555-5555-4555-8555-555555555502",
+      "nctId": "NCT02864992",
+      "title": "Tepotinib in MET exon 14 skipping NSCLC (VISION study)",
+      "phase": "phase-2",
+      "status": "active-not-recruiting",
+      "trialDataAsOf": "2026-05-01",
+      "matchStrength": "likely-eligible",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222203"
+        }
+      ],
+      "drugs": [
+        {
+          "name": "tepotinib"
+        }
+      ],
+      "locations": [
+        {
+          "country": "US"
+        },
+        {
+          "country": "DE"
+        },
+        {
+          "country": "JP"
+        }
+      ],
+      "url": "https://clinicaltrials.gov/study/NCT02864992"
+    }
+  ],
+  "contraindications": []
+}

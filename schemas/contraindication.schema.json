@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/contraindication.schema.json",
+  "title": "Contraindication",
+  "description": "A negative therapy implication: a drug to avoid, de-escalate, or not initiate based on a finding in the report. Covers resistance mutations (e.g., EGFR T790M emerging on first-generation EGFR TKI), lack-of-benefit findings (e.g., RAS-mutated colorectal disqualifying anti-EGFR antibodies), and assay-derived exclusions (e.g., HER2-negative IHC blocking trastuzumab). Resistance evidence tiers from proprietary KBs go in evidence.externalLevels under the implementation's licensing terms.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contraindicationId",
+    "triggeredBy",
+    "drug",
+    "reason"
+  ],
+  "properties": {
+    "contraindicationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "triggeredBy": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "refType",
+          "refId"
+        ],
+        "properties": {
+          "refType": {
+            "type": "string",
+            "enum": [
+              "variant",
+              "biomarker"
+            ]
+          },
+          "refId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "drug": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "brandName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rxNormCui": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d+$"
+        },
+        "drugClass": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Pharmacologic class when the contraindication applies to a class rather than a single agent (e.g., 'anti-EGFR monoclonal antibody', 'first-generation EGFR TKI')."
+        }
+      }
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "resistance-mutation",
+        "lack-of-benefit-evidence",
+        "absence-of-required-biomarker",
+        "drug-gene-interaction",
+        "immunotherapy-low-tmb",
+        "tumor-type-not-indicated",
+        "germline-toxicity-risk",
+        "regulator-warning",
+        "other"
+      ],
+      "description": "Categorical reason for the negative implication."
+    },
+    "narrative": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional human-readable explanation for the contraindication. Should reference the specific variant or biomarker driving the call."
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ampAscoCapTier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "I-A",
+            "I-B",
+            "II-C",
+            "II-D",
+            "III",
+            "IV",
+            null
+          ]
+        },
+        "externalLevels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional map of proprietary or third-party evidence levels keyed by knowledge-base identifier (e.g., {\"civic\": \"A\"}). Use only with appropriate licensing for the referenced knowledge base. The open-source schema does not prescribe values for any particular KB."
+        }
+      },
+      "description": "Evidence-tier metadata. AMP/ASCO/CAP 2017 is the public taxonomy carried in the open contract. Proprietary resistance-evidence levels go in externalLevels keyed by knowledge-base name."
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "citation"
+        ],
+        "properties": {
+          "citation": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "knowledgeBase": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

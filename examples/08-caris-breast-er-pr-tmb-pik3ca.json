@@ -1,0 +1,198 @@
+{
+  "audit": {
+    "responseId": "11111111-1111-4111-8111-111111111108",
+    "generatedAt": "2026-05-04T19:00:00Z",
+    "engineVersion": "0.4.0",
+    "schemaVersion": "0.1.0",
+    "vendorSource": {
+      "vendor": "Caris Life Sciences",
+      "product": "Caris MI Profile",
+      "reportFormat": "pdf",
+      "receivedAt": "2026-05-04T18:55:00Z"
+    },
+    "knowledgeBases": [
+      {
+        "name": "openFDA",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      },
+      {
+        "name": "ClinicalTrials.gov",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      }
+    ],
+    "watermark": "Synthetic data \u2014 demonstration only"
+  },
+  "specimen": {
+    "specimenType": "ffpe-tumor-tissue",
+    "primaryTumorSite": {
+      "icdo3Topography": "C50.1",
+      "display": "Central portion of breast"
+    },
+    "histology": {
+      "icdo3Morphology": "8500/3",
+      "display": "Invasive mammary carcinoma"
+    }
+  },
+  "variants": [
+    {
+      "variantId": "22222222-2222-4222-8222-222222222217",
+      "gene": {
+        "symbol": "PIK3CA",
+        "hgncId": "HGNC:8975"
+      },
+      "transcript": "NM_006218.4",
+      "hgvsProtein": "p.M1043I",
+      "variantType": "snv",
+      "molecularConsequence": "missense_variant",
+      "functionalEffect": "gain-of-function",
+      "exon": 21,
+      "germlineOrSomatic": "somatic",
+      "clinicalSignificance": "pathogenic",
+      "evidence": {
+        "ampAscoCapTier": "II-C"
+      }
+    }
+  ],
+  "biomarkers": [
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333320",
+      "type": "er",
+      "method": "ihc",
+      "score": "Positive | 3+, 100%",
+      "interpretation": "positive"
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333321",
+      "type": "pr",
+      "method": "ihc",
+      "score": "Positive | 2+, 95%",
+      "interpretation": "positive"
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333322",
+      "type": "her2-ihc",
+      "method": "ihc",
+      "score": "Negative | 0",
+      "interpretation": "negative",
+      "antibodyClone": "4B5"
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333323",
+      "type": "tmb",
+      "loincCode": "94076-7",
+      "method": "ngs",
+      "value": 14,
+      "unit": "mut/Mb",
+      "interpretation": "high",
+      "threshold": {
+        "value": 10,
+        "operator": "gte",
+        "unit": "mut/Mb"
+      }
+    }
+  ],
+  "cdxFlags": [
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444410",
+      "triggeredBy": [
+        {
+          "refType": "biomarker",
+          "refId": "33333333-3333-4333-8333-333333333323"
+        }
+      ],
+      "drug": {
+        "name": "pembrolizumab",
+        "brandName": "Keytruda",
+        "rxNormCui": "1547545",
+        "atcCode": "L01FF02"
+      },
+      "indication": {
+        "tumorType": "Tumor mutational burden-high (TMB-H \u226510 mut/Mb) unresectable or metastatic solid tumors",
+        "line": "second-line"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2020-06-16",
+      "evidence": {
+        "ampAscoCapTier": "II-C"
+      },
+      "citations": [
+        {
+          "citation": "FDA tissue-agnostic accelerated approval for pembrolizumab in TMB-H solid tumors (KEYNOTE-158).",
+          "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2024/125514s144lbl.pdf",
+          "knowledgeBase": "openFDA"
+        }
+      ]
+    }
+  ],
+  "trialMatches": [
+    {
+      "trialMatchId": "55555555-5555-4555-8555-555555555508",
+      "nctId": "NCT04191499",
+      "title": "Inavolisib plus palbociclib and fulvestrant in PIK3CA-mutant HR+/HER2- locally advanced or metastatic breast cancer (INAVO120)",
+      "phase": "phase-3",
+      "status": "active-not-recruiting",
+      "trialDataAsOf": "2026-05-01",
+      "sponsor": "Genentech / Roche",
+      "matchStrength": "likely-eligible",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222217"
+        }
+      ],
+      "eligibilityHints": [
+        {
+          "criterion": "PIK3CA-mutant HR+/HER2- metastatic breast cancer",
+          "matchStatus": "match"
+        },
+        {
+          "criterion": "Variant within trial-defined activating set",
+          "matchStatus": "match",
+          "reason": "p.M1043I is on the inavolisib eligibility list per Jhaveri KL et al., JCO 2024;42(33):3947\u20133956 (NCT03006172 GO39374)."
+        }
+      ],
+      "drugs": [
+        {
+          "name": "inavolisib"
+        },
+        {
+          "name": "palbociclib"
+        },
+        {
+          "name": "fulvestrant"
+        }
+      ],
+      "locations": [
+        {
+          "country": "US"
+        },
+        {
+          "country": "ES"
+        },
+        {
+          "country": "JP"
+        }
+      ],
+      "url": "https://clinicaltrials.gov/study/NCT04191499"
+    }
+  ],
+  "contraindications": [
+    {
+      "contraindicationId": "66666666-6666-4666-8666-666666666603",
+      "triggeredBy": [
+        {
+          "refType": "biomarker",
+          "refId": "33333333-3333-4333-8333-333333333322"
+        }
+      ],
+      "drug": {
+        "name": "trastuzumab",
+        "drugClass": "anti-HER2 monoclonal antibody"
+      },
+      "reason": "absence-of-required-biomarker",
+      "narrative": "HER2 IHC is 0; HER2-targeted therapies including trastuzumab and pertuzumab are not indicated by FDA labeling for HER2 IHC 0 disease."
+    }
+  ]
+}

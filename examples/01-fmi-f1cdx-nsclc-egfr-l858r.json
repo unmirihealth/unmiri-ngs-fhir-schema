@@ -1,0 +1,207 @@
+{
+  "audit": {
+    "responseId": "11111111-1111-4111-8111-111111111101",
+    "generatedAt": "2026-05-04T15:30:00Z",
+    "engineVersion": "0.4.0",
+    "schemaVersion": "0.1.0",
+    "vendorSource": {
+      "vendor": "Foundation Medicine",
+      "product": "FoundationOne CDx",
+      "reportId": null,
+      "reportFormat": "pdf",
+      "receivedAt": "2026-05-04T15:25:00Z"
+    },
+    "knowledgeBases": [
+      {
+        "name": "ClinVar",
+        "version": "2026-04-01",
+        "refreshedAt": "2026-04-01T00:00:00Z"
+      },
+      {
+        "name": "ClinicalTrials.gov",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      },
+      {
+        "name": "openFDA",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      },
+      {
+        "name": "HGNC",
+        "version": "2026-04-15",
+        "refreshedAt": "2026-04-15T00:00:00Z"
+      }
+    ],
+    "watermark": "Synthetic data \u2014 demonstration only",
+    "dataSources": []
+  },
+  "specimen": {
+    "specimenId": null,
+    "specimenType": "ffpe-tumor-tissue",
+    "primaryTumorSite": {
+      "snomedCode": "39607008",
+      "icdo3Topography": "C34.9",
+      "display": "Lung, NOS"
+    },
+    "histology": {
+      "icdo3Morphology": "8140/3",
+      "display": "Lung adenocarcinoma"
+    },
+    "specimenSite": null,
+    "tumorContent": 65
+  },
+  "variants": [
+    {
+      "variantId": "22222222-2222-4222-8222-222222222201",
+      "gene": {
+        "symbol": "EGFR",
+        "hgncId": "HGNC:3236"
+      },
+      "transcript": "NM_005228.5",
+      "hgvsCoding": "NM_005228.5:c.2573T>G",
+      "hgvsProtein": "NP_005219.2:p.(Leu858Arg)",
+      "hgvsGenomic": "NC_000007.13:g.55259515T>G",
+      "assembly": "GRCh37",
+      "chromosome": "7",
+      "start": 55259515,
+      "end": 55259515,
+      "referenceAllele": "T",
+      "alternateAllele": "G",
+      "variantType": "snv",
+      "molecularConsequence": "missense_variant",
+      "functionalEffect": "gain-of-function",
+      "variantAlleleFraction": 0.34,
+      "exon": 21,
+      "clinvarId": "16609",
+      "clinicalSignificance": "pathogenic",
+      "germlineOrSomatic": "somatic",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      },
+      "sources": [
+        {
+          "knowledgeBase": "ClinVar",
+          "recordId": "16609",
+          "url": "https://www.ncbi.nlm.nih.gov/clinvar/variation/16609/"
+        }
+      ]
+    }
+  ],
+  "biomarkers": [
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333301",
+      "type": "tmb",
+      "loincCode": "94076-7",
+      "method": "ngs",
+      "value": 5,
+      "unit": "mut/Mb",
+      "interpretation": "low",
+      "threshold": {
+        "value": 10,
+        "operator": "gte",
+        "unit": "mut/Mb"
+      }
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333302",
+      "type": "msi",
+      "loincCode": "81695-9",
+      "method": "ngs",
+      "interpretation": "stable",
+      "value": "MS-Stable"
+    }
+  ],
+  "cdxFlags": [
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444401",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222201"
+        }
+      ],
+      "drug": {
+        "name": "osimertinib",
+        "brandName": "Tagrisso",
+        "rxNormCui": "1721560",
+        "atcCode": "L01EB04"
+      },
+      "indication": {
+        "tumorType": "Metastatic non-small cell lung cancer",
+        "line": "first-line",
+        "snomedCode": "254637007"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2018-04-18",
+      "approvedAssay": {
+        "vendor": "Foundation Medicine",
+        "product": "FoundationOne CDx",
+        "fdaApprovalNumber": "P170019"
+      },
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      },
+      "citations": [
+        {
+          "citation": "FDA-approved labeling for osimertinib (Tagrisso), April 2018 (1L NSCLC).",
+          "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2024/208065s033lbl.pdf",
+          "knowledgeBase": "openFDA"
+        }
+      ]
+    }
+  ],
+  "trialMatches": [
+    {
+      "trialMatchId": "55555555-5555-4555-8555-555555555501",
+      "nctId": "NCT04035486",
+      "title": "FLAURA2: Osimertinib plus platinum-pemetrexed chemotherapy in first-line EGFR-mutant advanced NSCLC",
+      "phase": "phase-3",
+      "status": "active-not-recruiting",
+      "trialDataAsOf": "2026-05-01",
+      "sponsor": "AstraZeneca",
+      "matchStrength": "likely-eligible",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222201"
+        }
+      ],
+      "eligibilityHints": [
+        {
+          "criterion": "EGFR-activating mutation (L858R or exon 19 deletion)",
+          "matchStatus": "match"
+        },
+        {
+          "criterion": "First-line setting, no prior systemic therapy",
+          "matchStatus": "unknown",
+          "reason": "Treatment history is not derivable from a single NGS report."
+        }
+      ],
+      "drugs": [
+        {
+          "name": "osimertinib"
+        },
+        {
+          "name": "carboplatin"
+        },
+        {
+          "name": "pemetrexed"
+        }
+      ],
+      "locations": [
+        {
+          "country": "US"
+        },
+        {
+          "country": "ES"
+        },
+        {
+          "country": "JP"
+        }
+      ],
+      "url": "https://clinicaltrials.gov/study/NCT04035486"
+    }
+  ],
+  "contraindications": []
+}

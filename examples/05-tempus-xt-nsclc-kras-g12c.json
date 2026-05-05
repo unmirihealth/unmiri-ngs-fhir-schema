@@ -1,0 +1,220 @@
+{
+  "audit": {
+    "responseId": "11111111-1111-4111-8111-111111111105",
+    "generatedAt": "2026-05-04T17:30:00Z",
+    "engineVersion": "0.4.0",
+    "schemaVersion": "0.1.0",
+    "vendorSource": {
+      "vendor": "Tempus",
+      "product": "Tempus xT",
+      "reportFormat": "pdf",
+      "receivedAt": "2026-05-04T17:25:00Z"
+    },
+    "knowledgeBases": [
+      {
+        "name": "ClinVar",
+        "version": "2026-04-01",
+        "refreshedAt": "2026-04-01T00:00:00Z"
+      },
+      {
+        "name": "ClinicalTrials.gov",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      },
+      {
+        "name": "openFDA",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      }
+    ],
+    "watermark": "Synthetic data \u2014 demonstration only"
+  },
+  "specimen": {
+    "specimenType": "ffpe-tumor-tissue",
+    "primaryTumorSite": {
+      "icdo3Topography": "C34.9",
+      "display": "Lung, NOS"
+    },
+    "histology": {
+      "icdo3Morphology": "8140/3",
+      "display": "Lung adenocarcinoma"
+    },
+    "tumorContent": 55
+  },
+  "variants": [
+    {
+      "variantId": "22222222-2222-4222-8222-222222222210",
+      "gene": {
+        "symbol": "KRAS",
+        "hgncId": "HGNC:6407"
+      },
+      "transcript": "NM_004985.5",
+      "hgvsCoding": "NM_004985.5:c.34G>T",
+      "hgvsProtein": "NP_004976.2:p.(Gly12Cys)",
+      "variantType": "snv",
+      "molecularConsequence": "missense_variant",
+      "functionalEffect": "gain-of-function",
+      "variantAlleleFraction": 0.27,
+      "exon": 2,
+      "clinvarId": "12583",
+      "germlineOrSomatic": "somatic",
+      "clinicalSignificance": "pathogenic",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      }
+    },
+    {
+      "variantId": "22222222-2222-4222-8222-222222222211",
+      "gene": {
+        "symbol": "STK11",
+        "hgncId": "HGNC:11389"
+      },
+      "hgvsProtein": "p.R331fs",
+      "variantType": "indel",
+      "molecularConsequence": "frameshift_variant",
+      "functionalEffect": "loss-of-function",
+      "variantAlleleFraction": 0.2,
+      "germlineOrSomatic": "somatic"
+    },
+    {
+      "variantId": "22222222-2222-4222-8222-222222222212",
+      "gene": {
+        "symbol": "NFE2L2",
+        "hgncId": "HGNC:7782"
+      },
+      "hgvsProtein": "p.E79K",
+      "variantType": "snv",
+      "molecularConsequence": "missense_variant",
+      "functionalEffect": "gain-of-function",
+      "variantAlleleFraction": 0.16,
+      "germlineOrSomatic": "somatic"
+    },
+    {
+      "variantId": "22222222-2222-4222-8222-222222222213",
+      "gene": {
+        "symbol": "RBM10",
+        "hgncId": "HGNC:9907"
+      },
+      "hgvsProtein": "p.Y462fs",
+      "variantType": "indel",
+      "molecularConsequence": "frameshift_variant",
+      "functionalEffect": "loss-of-function",
+      "variantAlleleFraction": 0.21,
+      "germlineOrSomatic": "somatic"
+    },
+    {
+      "variantId": "22222222-2222-4222-8222-222222222214",
+      "gene": {
+        "symbol": "ARID2",
+        "hgncId": "HGNC:18037"
+      },
+      "hgvsProtein": "p.R285*",
+      "variantType": "snv",
+      "molecularConsequence": "stop_gained",
+      "functionalEffect": "loss-of-function",
+      "variantAlleleFraction": 0.31,
+      "germlineOrSomatic": "somatic"
+    }
+  ],
+  "biomarkers": [],
+  "cdxFlags": [
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444406",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222210"
+        }
+      ],
+      "drug": {
+        "name": "sotorasib",
+        "brandName": "Lumakras",
+        "rxNormCui": "2570113",
+        "atcCode": "L01XX73"
+      },
+      "indication": {
+        "tumorType": "Locally advanced or metastatic non-small cell lung cancer with KRAS G12C",
+        "line": "second-line"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2021-05-28",
+      "approvedAssay": {
+        "vendor": "QIAGEN",
+        "product": "therascreen KRAS RGQ PCR Kit",
+        "fdaApprovalNumber": "P110030"
+      },
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      },
+      "citations": [
+        {
+          "citation": "FDA accelerated approval for sotorasib (May 28, 2021); confirmatory CodeBreaK 200 trial.",
+          "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/214665s000lbl.pdf",
+          "knowledgeBase": "openFDA"
+        }
+      ]
+    },
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444407",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222210"
+        }
+      ],
+      "drug": {
+        "name": "adagrasib",
+        "brandName": "Krazati",
+        "rxNormCui": "2592957",
+        "atcCode": "L01XX79"
+      },
+      "indication": {
+        "tumorType": "Locally advanced or metastatic non-small cell lung cancer with KRAS G12C",
+        "line": "second-line"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2022-12-12",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      }
+    }
+  ],
+  "trialMatches": [
+    {
+      "trialMatchId": "55555555-5555-4555-8555-555555555505",
+      "nctId": "NCT04613596",
+      "title": "Adagrasib in combination with pembrolizumab in advanced non-squamous NSCLC with KRAS G12C (KRYSTAL-7)",
+      "phase": "phase-2",
+      "status": "active-not-recruiting",
+      "trialDataAsOf": "2026-05-01",
+      "matchStrength": "likely-eligible",
+      "triggeredBy": [
+        {
+          "refType": "variant",
+          "refId": "22222222-2222-4222-8222-222222222210"
+        }
+      ],
+      "drugs": [
+        {
+          "name": "adagrasib"
+        },
+        {
+          "name": "pembrolizumab"
+        }
+      ],
+      "locations": [
+        {
+          "country": "US"
+        },
+        {
+          "country": "ES"
+        },
+        {
+          "country": "FR"
+        }
+      ],
+      "url": "https://clinicaltrials.gov/study/NCT04613596"
+    }
+  ],
+  "contraindications": []
+}

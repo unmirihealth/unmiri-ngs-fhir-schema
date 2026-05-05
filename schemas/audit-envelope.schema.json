@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/audit-envelope.schema.json",
+  "title": "AuditEnvelope",
+  "description": "Provenance metadata accompanying every NGS interpretation response. Captures the source vendor report, the engine and schema versions that produced this payload, the knowledge-base versions consulted, mandatory data-source attributions, and a synthetic-vs-production watermark. Required so a clinical reviewer can reproduce the reasoning trail and an auditor can confirm no PHI leakage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "responseId",
+    "generatedAt",
+    "engineVersion",
+    "schemaVersion",
+    "vendorSource",
+    "knowledgeBases",
+    "watermark"
+  ],
+  "properties": {
+    "responseId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUIDv4 uniquely identifying this response. Stable across retries; reissued only on a fresh interpretation run."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 UTC timestamp when this response was assembled."
+    },
+    "engineVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][\\w.]+)?$",
+      "description": "Semantic version of the UNMIRI NGS interpretation pipeline interpretation pipeline that produced this payload."
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][\\w.]+)?$",
+      "description": "Semantic version of this NGS interpretation response schema. Follows the unmiri-ngs-fhir-schema repo's release tag."
+    },
+    "vendorSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vendor",
+        "product",
+        "reportFormat",
+        "receivedAt"
+      ],
+      "properties": {
+        "vendor": {
+          "type": "string",
+          "description": "Name of the lab or vendor that produced the source report (e.g., 'Foundation Medicine', 'Tempus', 'Caris Life Sciences', 'Guardant Health')."
+        },
+        "product": {
+          "type": "string",
+          "description": "Specific assay product (e.g., 'FoundationOne CDx', 'Tempus xT', 'Caris MI Profile', 'Guardant360 CDx')."
+        },
+        "reportId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Vendor-issued report identifier (case number, accession, etc). Opaque to UNMIRI."
+        },
+        "reportFormat": {
+          "type": "string",
+          "enum": [
+            "pdf",
+            "json",
+            "xml",
+            "hl7v2",
+            "hl7-fhir",
+            "edi-x12",
+            "csv",
+            "other"
+          ],
+          "description": "Wire format of the source report ingested by the pipeline."
+        },
+        "receivedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC 3339 UTC timestamp when the source report was received by the pipeline."
+        }
+      }
+    },
+    "knowledgeBases": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Versioned snapshots of every knowledge source consulted to produce this response. Required for clinical reproducibility \u2014 a recommendation must be reproducible against the exact KB version that emitted it.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "version",
+          "refreshedAt"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "ClinVar",
+              "ClinicalTrials.gov",
+              "openFDA",
+              "AACR Project GENIE",
+              "TCGA",
+              "HGNC",
+              "Ensembl",
+              "RefSeq",
+              "RxNorm",
+              "SNOMED-CT",
+              "LOINC",
+              "ICD-O-3",
+              "other"
+            ],
+            "description": "Canonical knowledge-base identifier."
+          },
+          "version": {
+            "type": "string",
+            "description": "KB-specific version string (e.g., 'v4.20', '2026-04-15', 'release-100')."
+          },
+          "refreshedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When UNMIRI's local mirror of this KB was last refreshed."
+          }
+        }
+      }
+    },
+    "watermark": {
+      "type": "string",
+      "enum": [
+        "Synthetic data \u2014 demonstration only",
+        "Production"
+      ],
+      "description": "Indicates whether this response describes real or synthetic data. The exact synthetic string is required on every example, sample, or pre-pilot artifact and must round-trip unchanged through any rendering pipeline."
+    },
+    "dataSources": {
+      "type": "array",
+      "description": "Mandatory attributions inherited from the data-use agreements of any knowledge base that contributed to this response (e.g., AACR Project GENIE citation block, ClinVar attribution).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "attribution"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "reasoningTrace": {
+      "type": "array",
+      "description": "Optional ordered list of reasoning steps that produced this response. Useful for clinical-review traceability and for explaining how a CDx flag or trial match was derived. Each step references an upstream variant, biomarker, or KB record.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "step",
+          "description"
+        ],
+        "properties": {
+          "step": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "knowledgeBaseRef": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

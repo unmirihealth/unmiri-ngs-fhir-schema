@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/cdx-flag.schema.json",
+  "title": "CdxFlag",
+  "description": "A companion-diagnostic match: a variant or biomarker in this report that matches the FDA-approved (or other regulator) labeling indication for a specific drug in a specific tumor type. CDx flags are the highest-confidence therapy implications because they are directly anchored to a regulator-approved label, not derived from inference. Maps to the FHIR Genomics 'Therapeutic Implication' Observation profile.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cdxFlagId",
+    "triggeredBy",
+    "drug",
+    "indication",
+    "approvalRegime"
+  ],
+  "properties": {
+    "cdxFlagId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable UUID for this CDx flag within this NGS interpretation response."
+    },
+    "triggeredBy": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of variant or biomarker IDs from this same response that triggered the match. Each ID must resolve to a Variant.variantId or Biomarker.biomarkerId in the same NgsInterpretationResponse payload.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "refType",
+          "refId"
+        ],
+        "properties": {
+          "refType": {
+            "type": "string",
+            "enum": [
+              "variant",
+              "biomarker"
+            ],
+            "description": "Whether the trigger reference is a Variant or a Biomarker."
+          },
+          "refId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "drug": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "International nonproprietary name (INN) of the drug, lowercase (e.g., 'osimertinib', 'capmatinib', 'larotrectinib')."
+        },
+        "brandName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Most-recognized brand name (e.g., 'Tagrisso', 'Tabrecta', 'Vitrakvi')."
+        },
+        "rxNormCui": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d+$",
+          "description": "RxNorm concept unique identifier."
+        },
+        "atcCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z]\\d{2}[A-Z]{2}\\d{2}$",
+          "description": "WHO ATC code (e.g., 'L01EB04' for osimertinib)."
+        }
+      }
+    },
+    "indication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tumorType"
+      ],
+      "properties": {
+        "tumorType": {
+          "type": "string",
+          "description": "Cancer type or histology in the FDA label indication (e.g., 'metastatic non-small cell lung cancer', 'BRCA-mutated metastatic castration-resistant prostate cancer')."
+        },
+        "line": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "first-line",
+            "second-line",
+            "third-line-or-later",
+            "any-line",
+            "maintenance",
+            "adjuvant",
+            "neoadjuvant",
+            null
+          ],
+          "description": "Line-of-therapy restriction in the approval, when present."
+        },
+        "snomedCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Optional SNOMED CT code for the tumor type."
+        },
+        "icdo3Topography": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^C\\d{2}(\\.\\d)?$"
+        }
+      }
+    },
+    "approvalRegime": {
+      "type": "string",
+      "enum": [
+        "FDA",
+        "EMA",
+        "MHRA",
+        "PMDA",
+        "NMPA",
+        "Health-Canada",
+        "TGA",
+        "other"
+      ],
+      "description": "Which regulatory body issued the approval underlying this CDx flag. UNMIRI's primary regime is FDA; international regimes are reported when the source KB carries them."
+    },
+    "approvalDate": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Date the regulator approved this drug-biomarker-indication combination."
+    },
+    "approvedAssay": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "The specific assay product that is the regulator-approved CDx for this indication, when applicable. Used to flag whether the source report's vendor-product is itself the approved CDx, or merely a comparable assay producing the same biomarker call.",
+      "properties": {
+        "vendor": {
+          "type": "string"
+        },
+        "product": {
+          "type": "string"
+        },
+        "fdaApprovalNumber": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^P\\d{6,8}(?:S\\d+)?[A-Z]?$",
+          "description": "FDA PMA approval number (e.g., 'P170019', 'P200010')."
+        }
+      },
+      "required": [
+        "vendor",
+        "product"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ampAscoCapTier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "I-A",
+            "I-B",
+            "II-C",
+            "II-D",
+            "III",
+            "IV",
+            null
+          ]
+        },
+        "externalLevels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional map of proprietary or third-party evidence levels keyed by knowledge-base identifier (e.g., {\"civic\": \"A\"}). Use only with appropriate licensing for the referenced knowledge base. The open-source schema does not prescribe values for any particular KB."
+        }
+      },
+      "description": "Evidence-tier metadata. AMP/ASCO/CAP 2017 is the public taxonomy carried in the open contract. For CDx flags, this is typically Tier I-A (FDA-recognized biomarker). Proprietary or third-party levels go in externalLevels keyed by knowledge-base name."
+    },
+    "citations": {
+      "type": "array",
+      "description": "Authoritative sources for this CDx claim: FDA label PDF, peer-reviewed primary trial publication, and any KB record under appropriate licensing terms.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "citation"
+        ],
+        "properties": {
+          "citation": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "knowledgeBase": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

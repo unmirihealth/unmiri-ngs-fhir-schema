@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/biomarker.schema.json",
+  "title": "Biomarker",
+  "description": "A non-variant biomarker measurement: tumor mutational burden, microsatellite instability, mismatch-repair status, homologous-recombination deficiency, PD-L1 expression, hormone-receptor IHC, or other categorical/continuous tumor measurements that drive therapy selection. Each Biomarker maps to a FHIR Observation; LOINC codes are provided where standardized.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "biomarkerId",
+    "type",
+    "method",
+    "interpretation"
+  ],
+  "properties": {
+    "biomarkerId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable UUID for this biomarker measurement within this NGS interpretation response."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "tmb",
+        "msi",
+        "mmr",
+        "hrd",
+        "loh",
+        "pd-l1",
+        "er",
+        "pr",
+        "her2-ihc",
+        "her2-ish",
+        "ar",
+        "ki-67",
+        "tumor-fraction",
+        "tumor-purity",
+        "other"
+      ],
+      "description": "Biomarker class. 'mmr' covers four-protein IHC (MLH1/MSH2/MSH6/PMS2); 'msi' covers PCR or NGS-based MSI status; 'tmb' covers mutations per megabase from sequencing; 'pd-l1' covers any antibody clone (clone is captured separately)."
+    },
+    "loincCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "LOINC code identifying this measurement (e.g., '94076-7' for TMB by NGS, '81695-9' for MSI in cancer specimen by molecular genetics, '85319-2' for HER2 by IHC)."
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "ngs",
+        "ihc",
+        "fish",
+        "cish",
+        "pcr",
+        "ish",
+        "other"
+      ],
+      "description": "Measurement method. NGS-based TMB and IHC-based PD-L1 are not interchangeable: clones, thresholds, and accuracy differ."
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Quantitative value when applicable (e.g., 24 for TMB in mut/Mb; 0.13 for tumor fraction). String when the source report supplies only a qualitative grade (e.g., 'High')."
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Unit of measurement (e.g., 'mut/Mb' for TMB, '%' for percentage scores, null for categorical biomarkers)."
+    },
+    "interpretation": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "negative",
+        "high",
+        "intermediate",
+        "low",
+        "stable",
+        "unstable",
+        "deficient",
+        "proficient",
+        "amplified",
+        "not-amplified",
+        "equivocal",
+        "indeterminate",
+        "not-applicable"
+      ],
+      "description": "Clinical interpretation as reported. The pipeline normalizes vendor labels (e.g., 'MSI-H', 'High', 'Unstable') to a single closed set."
+    },
+    "threshold": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Reference threshold or cutoff used for interpretation, when reported.",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "gte",
+            "lte",
+            "gt",
+            "lt",
+            "eq"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "antibodyClone": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "For IHC biomarkers (esp. PD-L1, HER2, ER, PR, Ki-67), the antibody clone used (e.g., 'SP142', '22C3', 'SP263', '28-8'). Different clones for the same target produce non-interchangeable results."
+    },
+    "scoringSystem": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "For PD-L1 specifically: 'TPS', 'CPS', 'IC' (immune cell), 'TC' (tumor cell). For HER2: 'IHC 0/1+/2+/3+', 'ISH ratio'. For ER/PR: 'Allred score', 'percent positive nuclei'."
+    },
+    "score": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Free-form score string when the result is a graded label rather than a numeric value (e.g., '3+, 100%' for an IHC score; 'IHC 2+ / FISH-amplified')."
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ampAscoCapTier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "I-A",
+            "I-B",
+            "II-C",
+            "II-D",
+            "III",
+            "IV",
+            null
+          ]
+        },
+        "externalLevels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional map of proprietary or third-party evidence levels keyed by knowledge-base identifier (e.g., {\"civic\": \"A\"}). Use only with appropriate licensing for the referenced knowledge base. The open-source schema does not prescribe values for any particular KB."
+        }
+      },
+      "description": "Evidence-tier metadata. AMP/ASCO/CAP 2017 is the public taxonomy carried in the open contract. Proprietary or third-party levels go in externalLevels keyed by knowledge-base name; obtain appropriate licensing before populating it."
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "knowledgeBase",
+          "recordId"
+        ],
+        "properties": {
+          "knowledgeBase": {
+            "type": "string"
+          },
+          "recordId": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  }
+}

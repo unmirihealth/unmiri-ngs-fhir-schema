@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/ngs-interpretation-response.schema.json",
+  "title": "NgsInterpretationResponse",
+  "description": "Top-level response payload describing the parsed and interpreted output of a single NGS report. Consolidates the audit envelope, specimen context, normalized variants and biomarkers, FDA companion-diagnostic flags, ClinicalTrials.gov match candidates, and contraindications into a vendor-agnostic structure. Maps cleanly to a FHIR Bundle whose root is a Genomics-IG DiagnosticReport when downstream consumers want a FHIR view, but is intentionally simpler than a literal FHIR Bundle for engineering ergonomics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["audit", "specimen", "variants", "biomarkers", "cdxFlags", "trialMatches", "contraindications"],
+  "properties": {
+    "audit": {
+      "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/audit-envelope.schema.json"
+    },
+    "specimen": {
+      "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/specimen.schema.json"
+    },
+    "variants": {
+      "type": "array",
+      "description": "All genomic variants reported. May be empty for a normal/negative report.",
+      "items": {
+        "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/variant.schema.json"
+      }
+    },
+    "biomarkers": {
+      "type": "array",
+      "description": "All non-variant biomarkers measured in this report (TMB, MSI, PD-L1, ER/PR/HER2, etc.). May be empty when the source assay does not cover any biomarker classes.",
+      "items": {
+        "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/biomarker.schema.json"
+      }
+    },
+    "cdxFlags": {
+      "type": "array",
+      "description": "Companion-diagnostic matches for this case. Empty when no variant or biomarker matches an approved CDx label indication for this tumor type.",
+      "items": {
+        "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/cdx-flag.schema.json"
+      }
+    },
+    "trialMatches": {
+      "type": "array",
+      "description": "Clinical-trial match candidates. The pipeline returns matches; final eligibility is a clinician decision.",
+      "items": {
+        "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/trial-match.schema.json"
+      }
+    },
+    "contraindications": {
+      "type": "array",
+      "description": "Negative therapy implications: drugs to avoid or de-escalate based on findings in this report.",
+      "items": {
+        "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/contraindication.schema.json"
+      }
+    }
+  }
+}

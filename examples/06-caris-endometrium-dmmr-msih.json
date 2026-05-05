@@ -1,0 +1,187 @@
+{
+  "audit": {
+    "responseId": "11111111-1111-4111-8111-111111111106",
+    "generatedAt": "2026-05-04T18:00:00Z",
+    "engineVersion": "0.4.0",
+    "schemaVersion": "0.1.0",
+    "vendorSource": {
+      "vendor": "Caris Life Sciences",
+      "product": "Caris MI Profile",
+      "reportFormat": "pdf",
+      "receivedAt": "2026-05-04T17:55:00Z"
+    },
+    "knowledgeBases": [
+      {
+        "name": "ClinicalTrials.gov",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      },
+      {
+        "name": "openFDA",
+        "version": "2026-05-01",
+        "refreshedAt": "2026-05-01T00:00:00Z"
+      }
+    ],
+    "watermark": "Synthetic data \u2014 demonstration only"
+  },
+  "specimen": {
+    "specimenType": "ffpe-tumor-tissue",
+    "primaryTumorSite": {
+      "snomedCode": "20837000",
+      "icdo3Topography": "C54.1",
+      "display": "Endometrium"
+    },
+    "histology": {
+      "icdo3Morphology": "8380/3",
+      "display": "Endometrioid adenocarcinoma, NOS"
+    },
+    "specimenSite": "Uterus, NOS"
+  },
+  "variants": [
+    {
+      "variantId": "22222222-2222-4222-8222-222222222215",
+      "gene": {
+        "symbol": "JAK1",
+        "hgncId": "HGNC:6190"
+      },
+      "hgvsProtein": "p.K860fs",
+      "variantType": "indel",
+      "molecularConsequence": "frameshift_variant",
+      "functionalEffect": "loss-of-function",
+      "exon": 19,
+      "germlineOrSomatic": "somatic",
+      "clinicalSignificance": "pathogenic"
+    },
+    {
+      "variantId": "22222222-2222-4222-8222-222222222216",
+      "gene": {
+        "symbol": "NBN",
+        "hgncId": "HGNC:7652"
+      },
+      "hgvsProtein": "p.R466fs",
+      "variantType": "indel",
+      "molecularConsequence": "frameshift_variant",
+      "functionalEffect": "loss-of-function",
+      "exon": 10,
+      "germlineOrSomatic": "somatic",
+      "clinicalSignificance": "pathogenic"
+    }
+  ],
+  "biomarkers": [
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333310",
+      "type": "mmr",
+      "method": "ihc",
+      "interpretation": "deficient",
+      "score": "MLH1 absent, PMS2 absent; MSH2 intact, MSH6 intact"
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333311",
+      "type": "msi",
+      "loincCode": "81695-9",
+      "method": "ngs",
+      "interpretation": "high",
+      "value": "MSI-H"
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333312",
+      "type": "tmb",
+      "loincCode": "94076-7",
+      "method": "ngs",
+      "value": 17,
+      "unit": "mut/Mb",
+      "interpretation": "high",
+      "threshold": {
+        "value": 10,
+        "operator": "gte",
+        "unit": "mut/Mb"
+      }
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333313",
+      "type": "er",
+      "method": "ihc",
+      "score": "Positive | 2+, 95%",
+      "interpretation": "positive"
+    },
+    {
+      "biomarkerId": "33333333-3333-4333-8333-333333333314",
+      "type": "pr",
+      "method": "ihc",
+      "score": "Positive | 2+, 95%",
+      "interpretation": "positive"
+    }
+  ],
+  "cdxFlags": [
+    {
+      "cdxFlagId": "44444444-4444-4444-8444-444444444408",
+      "triggeredBy": [
+        {
+          "refType": "biomarker",
+          "refId": "33333333-3333-4333-8333-333333333310"
+        },
+        {
+          "refType": "biomarker",
+          "refId": "33333333-3333-4333-8333-333333333311"
+        }
+      ],
+      "drug": {
+        "name": "pembrolizumab",
+        "brandName": "Keytruda",
+        "rxNormCui": "1547545",
+        "atcCode": "L01FF02"
+      },
+      "indication": {
+        "tumorType": "Microsatellite-instability-high (MSI-H) or mismatch-repair-deficient (dMMR) advanced or recurrent endometrial carcinoma",
+        "line": "second-line"
+      },
+      "approvalRegime": "FDA",
+      "approvalDate": "2022-03-21",
+      "evidence": {
+        "ampAscoCapTier": "I-A"
+      },
+      "citations": [
+        {
+          "citation": "FDA approval for pembrolizumab as a single agent in MSI-H or dMMR advanced endometrial carcinoma (KEYNOTE-158).",
+          "url": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2024/125514s144lbl.pdf",
+          "knowledgeBase": "openFDA"
+        }
+      ]
+    }
+  ],
+  "trialMatches": [
+    {
+      "trialMatchId": "55555555-5555-4555-8555-555555555506",
+      "nctId": "NCT03517449",
+      "title": "Dostarlimab in advanced or recurrent endometrial cancer (RUBY)",
+      "phase": "phase-3",
+      "status": "active-not-recruiting",
+      "trialDataAsOf": "2026-05-01",
+      "matchStrength": "likely-eligible",
+      "triggeredBy": [
+        {
+          "refType": "biomarker",
+          "refId": "33333333-3333-4333-8333-333333333311"
+        }
+      ],
+      "drugs": [
+        {
+          "name": "dostarlimab"
+        }
+      ],
+      "locations": [
+        {
+          "country": "US"
+        },
+        {
+          "country": "FR"
+        },
+        {
+          "country": "BE"
+        }
+      ],
+      "url": "https://clinicaltrials.gov/study/NCT03517449"
+    }
+  ],
+  "contraindications": []
+}

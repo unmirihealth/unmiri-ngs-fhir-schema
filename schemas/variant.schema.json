@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/variant.schema.json",
+  "title": "Variant",
+  "description": "A single genomic variant detected in the source report. One Variant maps to one FHIR Observation conforming to the Genomics IG 'Genomic Variant' profile (LOINC 69548-6). HGVS coding-DNA notation is the canonical normalization target \u2014 even when the source report supplies only a vendor-specific shorthand (e.g., 'EGFR L858R'), the pipeline normalizes to a HGVS string anchored to a specific RefSeq transcript and assembly.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "variantId",
+    "gene",
+    "variantType",
+    "germlineOrSomatic"
+  ],
+  "properties": {
+    "variantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable UUID for this variant within this NGS interpretation response. Referenced by CdxFlag, TrialMatch, and Contraindication payloads."
+    },
+    "gene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "symbol"
+      ],
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "HGNC official gene symbol (e.g., 'EGFR', 'BRCA2', 'KRAS'). Must be the current HGNC symbol; aliases are not accepted."
+        },
+        "hgncId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^HGNC:\\d+$",
+          "description": "HGNC numeric ID prefixed with 'HGNC:' (e.g., 'HGNC:3236' for EGFR)."
+        }
+      }
+    },
+    "transcript": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(NM_|ENST|XM_)[\\w.]+$",
+      "description": "RefSeq mRNA accession (NM_*) or Ensembl transcript ID (ENST*) used as the reference for HGVS notation. Transcript pinning matters: variant nomenclature is transcript-specific."
+    },
+    "hgvsCoding": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([\\w._-]+:)?c\\..+",
+      "description": "HGVS coding-DNA notation. Transcript prefix is recommended (e.g., 'NM_005228.5:c.2573T>G') and is the canonical form for downstream KB joins, but bare-form 'c.2573T>G' is permitted when the upstream report does not pin a transcript."
+    },
+    "hgvsProtein": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([\\w._-]+:)?p\\..+",
+      "description": "HGVS protein notation when the variant translates (e.g., 'NP_005219.2:p.(Leu858Arg)' fully pinned, or 'p.L858R' bare form as commonly reported by vendors). Optional; not all variants have a protein representation."
+    },
+    "hgvsGenomic": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(NC_|chr)[\\w.:>_-]+",
+      "description": "HGVS genomic notation pinned to a reference assembly contig (e.g., 'NC_000007.13:g.55259515T>G')."
+    },
+    "assembly": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "GRCh37",
+        "GRCh38",
+        "T2T-CHM13",
+        null
+      ],
+      "description": "Reference assembly underlying the genomic coordinates for this variant."
+    },
+    "chromosome": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^(chr)?(\\d{1,2}|X|Y|MT|M)$",
+      "description": "Chromosome identifier as reported (with or without 'chr' prefix)."
+    },
+    "start": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "1-based start position on the reference assembly."
+    },
+    "end": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "1-based end position on the reference assembly. For SNVs, end == start."
+    },
+    "referenceAllele": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Reference allele string (e.g., 'T'). For deletions, may be longer than 1 nucleotide."
+    },
+    "alternateAllele": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Alternate allele observed in the tumor (e.g., 'G'). For insertions, may be longer than the reference allele."
+    },
+    "variantType": {
+      "type": "string",
+      "enum": [
+        "snv",
+        "mnv",
+        "insertion",
+        "deletion",
+        "indel",
+        "duplication",
+        "cnv-amplification",
+        "cnv-loss",
+        "fusion",
+        "rearrangement",
+        "exon-skipping",
+        "splice",
+        "complex",
+        "other"
+      ],
+      "description": "Variant class. The pipeline normalizes vendor-specific labels to this closed set so downstream consumers can route variants by type without per-vendor parsing."
+    },
+    "molecularConsequence": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "missense_variant",
+        "synonymous_variant",
+        "stop_gained",
+        "stop_lost",
+        "frameshift_variant",
+        "inframe_insertion",
+        "inframe_deletion",
+        "splice_donor_variant",
+        "splice_acceptor_variant",
+        "splice_region_variant",
+        "intron_variant",
+        "5_prime_UTR_variant",
+        "3_prime_UTR_variant",
+        "coding_sequence_variant",
+        "structural_variant",
+        "fusion",
+        "regulatory_region_variant",
+        "intergenic_variant",
+        null
+      ],
+      "description": "Sequence Ontology term describing the variant's molecular consequence on the transcript."
+    },
+    "functionalEffect": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "loss-of-function",
+        "gain-of-function",
+        "neutral",
+        "switch-of-function",
+        "unknown",
+        null
+      ],
+      "description": "The pipeline's classification of the variant's protein-level functional effect, derived from KB consensus."
+    },
+    "variantAlleleFraction": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Variant allele fraction (0\u20131). Vendor reports in percent (e.g., 23.8%) are normalized to fraction (0.238)."
+    },
+    "copyNumber": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Estimated absolute copy number for CNV calls. For amplifications, typically \u22656; for losses, 0 or 1."
+    },
+    "fusionPartner": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Partner gene for fusion or rearrangement events (e.g., for an EML4-ALK fusion called on the ALK side, fusionPartner='EML4'). Optional for rearrangements where the partner is unknown."
+    },
+    "exon": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "Exon number where the variant lies, when applicable."
+    },
+    "clinvarId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d+$",
+      "description": "ClinVar Variation ID (numeric)."
+    },
+    "cosmicId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^COSV\\d+|COSM\\d+$",
+      "description": "COSMIC variant identifier."
+    },
+    "clinicalSignificance": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "pathogenic",
+        "likely-pathogenic",
+        "uncertain-significance",
+        "likely-benign",
+        "benign",
+        "conflicting",
+        "not-classified"
+      ],
+      "description": "ACMG/AMP-style clinical significance for germline variants and AMP/ASCO/CAP-style oncogenicity for somatic variants. The pipeline reports the consensus from joined KBs."
+    },
+    "germlineOrSomatic": {
+      "type": "string",
+      "enum": [
+        "somatic",
+        "germline",
+        "unknown"
+      ],
+      "description": "Origin classification. Tumor-only assays cannot distinguish definitively and report 'unknown' or use heuristic suspicion flags; tumor-normal assays report 'somatic' or 'germline' deterministically."
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Evidence-tier metadata used to grade clinical actionability. AMP/ASCO/CAP 2017 (Li MM et al., J Mol Diagn 2017) is the public, citable academic taxonomy carried in the open contract. Implementations that license proprietary level systems populate them in externalLevels keyed by knowledge-base name; the open-source schema does not prescribe values for any particular KB and consumers are responsible for the licensing of any KB they reference.",
+      "properties": {
+        "ampAscoCapTier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "I-A",
+            "I-B",
+            "II-C",
+            "II-D",
+            "III",
+            "IV",
+            null
+          ],
+          "description": "AMP/ASCO/CAP 2017 somatic-variant interpretation tier."
+        },
+        "externalLevels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional map of proprietary or third-party evidence levels keyed by knowledge-base identifier (e.g., {\"civic\": \"A\"}). Use only with appropriate licensing for the referenced knowledge base. The open-source schema does not prescribe values for any particular KB."
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Knowledge-base records that contributed to this variant's annotation. Each entry references the AuditEnvelope.knowledgeBases array by name.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "knowledgeBase",
+          "recordId"
+        ],
+        "properties": {
+          "knowledgeBase": {
+            "type": "string"
+          },
+          "recordId": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  }
+}

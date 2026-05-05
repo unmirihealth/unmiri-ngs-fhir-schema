@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/trial-match.schema.json",
+  "title": "TrialMatch",
+  "description": "A clinical trial from ClinicalTrials.gov whose eligibility profile matches one or more variants or biomarkers in this response. The pipeline returns 'match candidates' — likely-eligible or possibly-eligible — and never 'enrollable': final eligibility requires patient-level review beyond what an interpretation API can see (performance status, prior therapies, comorbidities, geographic feasibility).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["trialMatchId", "nctId", "title", "matchStrength", "triggeredBy"],
+  "properties": {
+    "trialMatchId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable UUID for this trial-match within this NGS interpretation response."
+    },
+    "nctId": {
+      "type": "string",
+      "pattern": "^NCT\\d{8}$",
+      "description": "ClinicalTrials.gov registry ID."
+    },
+    "title": {
+      "type": "string",
+      "description": "Public-facing trial title, copied from ClinicalTrials.gov."
+    },
+    "phase": {
+      "type": ["string", "null"],
+      "enum": ["early-phase-1", "phase-1", "phase-1-2", "phase-2", "phase-2-3", "phase-3", "phase-4", "not-applicable", null]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not-yet-recruiting",
+        "recruiting",
+        "enrolling-by-invitation",
+        "active-not-recruiting",
+        "suspended",
+        "terminated",
+        "completed",
+        "withdrawn",
+        "unknown"
+      ],
+      "description": "ClinicalTrials.gov status as of trialDataAsOf."
+    },
+    "trialDataAsOf": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "When the pipeline last refreshed this trial's metadata from ClinicalTrials.gov."
+    },
+    "sponsor": {
+      "type": ["string", "null"]
+    },
+    "matchStrength": {
+      "type": "string",
+      "enum": ["likely-eligible", "possibly-eligible", "ineligible-but-relevant"],
+      "description": "The pipeline's qualitative match grade. 'likely-eligible' means every parsed eligibility constraint the pipeline can evaluate from the report is satisfied; 'possibly-eligible' means key constraints are unknown; 'ineligible-but-relevant' is included only when a flagged exclusion is present (e.g., resistance mutation that the trial excludes)."
+    },
+    "triggeredBy": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["refType", "refId"],
+        "properties": {
+          "refType": { "type": "string", "enum": ["variant", "biomarker"] },
+          "refId": { "type": "string", "format": "uuid" }
+        }
+      }
+    },
+    "eligibilityHints": {
+      "type": "array",
+      "description": "Per-criterion notes explaining how the report matched or could not be evaluated against the trial's eligibility list. Not a substitute for human review.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["criterion", "matchStatus"],
+        "properties": {
+          "criterion": { "type": "string" },
+          "matchStatus": {
+            "type": "string",
+            "enum": ["match", "mismatch", "unknown"]
+          },
+          "reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "drugs": {
+      "type": "array",
+      "description": "Investigational therapies under study in this trial.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "rxNormCui": { "type": ["string", "null"], "pattern": "^\\d+$" }
+        }
+      }
+    },
+    "locations": {
+      "type": "array",
+      "description": "A coarse list of recruiting-site geography facets. Site-level addresses and PI contact information are intentionally not surfaced here; the full list lives on ClinicalTrials.gov.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "city": { "type": ["string", "null"] },
+          "stateOrRegion": { "type": ["string", "null"] },
+          "country": { "type": "string" }
+        },
+        "required": ["country"]
+      }
+    },
+    "url": {
+      "type": ["string", "null"],
+      "format": "uri",
+      "description": "Canonical trial URL on ClinicalTrials.gov."
+    }
+  }
+}
