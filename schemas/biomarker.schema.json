@@ -9,7 +9,8 @@
     "biomarkerId",
     "type",
     "method",
-    "interpretation"
+    "interpretation",
+    "provenance"
   ],
   "properties": {
     "biomarkerId": {
@@ -200,6 +201,9 @@
           }
         }
       }
+    },
+    "provenance": {
+      "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/provenance.schema.json"
     }
   }
 }

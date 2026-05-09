@@ -9,7 +9,8 @@
     "variantId",
     "gene",
     "variantType",
-    "germlineOrSomatic"
+    "germlineOrSomatic",
+    "provenance"
   ],
   "properties": {
     "variantId": {
@@ -310,6 +311,9 @@
           }
         }
       }
+    },
+    "provenance": {
+      "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/provenance.schema.json"
     }
   }
 }

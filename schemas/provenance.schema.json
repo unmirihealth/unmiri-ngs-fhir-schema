@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/provenance.schema.json",
+  "title": "Provenance",
+  "description": "Source-tracking metadata for an extracted finding (Variant or Biomarker). Required on every finding so a clinical-incident reviewer can answer: which tier of the parser produced this, on which page, at which bounding box, with which source text quote, and whether a downstream LLM judge agreed. A finding emitted to the canonical store without complete provenance is a clinical-safety failure and must be routed to human review per the engine 1 architecture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sourceTier",
+    "sourceFormat"
+  ],
+  "properties": {
+    "sourceTier": {
+      "type": "string",
+      "enum": [
+        "structured-feed",
+        "tier-0-triage",
+        "tier-1-deterministic",
+        "tier-2-ml-layout",
+        "tier-3-cloud-ocr",
+        "tier-4-vision-llm",
+        "human-curated"
+      ],
+      "description": "Which extraction tier produced this finding. Aligns with the 5-tier escalation pipeline defined in unmiri-engine-1/docs/architecture.md. 'structured-feed' covers vendor XML/JSON/HL7-FHIR ingestion, 'human-curated' covers manual review queue overrides."
+    },
+    "sourceFormat": {
+      "type": "string",
+      "enum": [
+        "pdf",
+        "xml",
+        "json",
+        "hl7v2",
+        "hl7-fhir",
+        "csv",
+        "manual"
+      ],
+      "description": "Format of the source artifact this finding came from."
+    },
+    "sourcePage": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "description": "1-indexed page number for PDF sources. Null for non-PDF sources."
+    },
+    "sourceBbox": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "properties": {
+        "x0": { "type": "number" },
+        "y0": { "type": "number" },
+        "x1": { "type": "number" },
+        "y1": { "type": "number" }
+      },
+      "description": "Bounding box of the source text region in PDF coordinate space. Null for non-PDF sources or when geometry was not preserved."
+    },
+    "sourceTextQuote": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000,
+      "description": "Verbatim text quote from the source artifact that supports this finding. Required for any finding produced by the LLM tier (Tier 4) — the LLM is instructed to refuse output without a quote. Strongly recommended for all tiers; null only when the source format does not support text extraction (e.g., binary HL7 v2 fields)."
+    },
+    "sourceSection": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Vendor-specific section heading the finding was extracted from (e.g., 'Genomic Findings', 'Therapies with clinical benefit', 'Variants of Unknown Significance'). Used for downstream tier classification (FMI section name → AMP/ASCO/CAP tier mapping)."
+    },
+    "extractorVersion": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Identifier for the specific extractor that produced the finding (e.g., 'fmi_parser/0.2.0', 'tempus_parser/0.1.0', 'gpt-4o-2024-11-20'). Helps with regression analysis when a specific extractor version drifts."
+    },
+    "judgeVerdict": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "agree",
+        "disagree",
+        "missing-variant",
+        "hallucinated-variant",
+        "ambiguous",
+        "not-judged"
+      ],
+      "description": "Verdict from the LLM-as-judge gate (a second-model pass that reviews the candidate JSON against the page image). 'not-judged' when the finding bypassed the LLM tier (e.g., came from a structured feed). Disagreement → human review queue."
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Per-finding confidence score from the extracting tier. Calibration is tier-specific: deterministic tiers use heuristic confidence (e.g., regex match strength + table-cell adjacency); LLM tiers use the model's own confidence signal where available, else 1.0 if the strict-JSON-Schema response validates. <0.85 typically routes to the next tier."
+    },
+    "validationFlags": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "structural-heuristic-fail",
+          "domain-validator-fail",
+          "cross-tier-disagreement",
+          "judge-disagreement",
+          "manual-correction",
+          "low-text-quality",
+          "encrypted-pdf-fallback",
+          "ocr-required"
+        ]
+      },
+      "description": "Validation gate flags raised during extraction. Empty array means all gates passed cleanly. Any flag → consumer SHOULD treat the finding with appropriate caution; downstream consumers MAY filter findings with specific flags."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.unmiri.com/ngs-interpretation/v0/finding-ref.schema.json",
+  "title": "FindingRef",
+  "description": "Reference to a finding (Variant, Biomarker, etc.) within the same NgsInterpretationResponse. Used by recommendations to point at the variants/biomarkers that triggered the rule. The shared FindingRef definition lives here so it can be reused across cdx-flag, contraindication, trial-match, and recommendation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["refType", "refId"],
+  "properties": {
+    "refType": {
+      "type": "string",
+      "enum": ["variant", "biomarker", "cdxFlag"],
+      "description": "Which top-level array the referenced finding lives in."
+    },
+    "refId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID of the referenced finding (variantId, biomarkerId, or cdxFlagId)."
+    }
+  }
+}

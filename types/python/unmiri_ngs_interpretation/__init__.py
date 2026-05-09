@@ -1,5 +1,8 @@
 """Python pydantic v2 models for the API contract."""
 
+# Import order matters: models.py defines FindingRef which
+# recommendations.py imports. After both are loaded, resolve the
+# forward reference NgsInterpretationResponse.recommendations.
 from .models import (
     AmpAscoCapTier,
     AuditEnvelope,
@@ -11,21 +14,41 @@ from .models import (
     Contraindication,
     ContraindicationReason,
     DrugRef,
+    JudgeVerdict,
     NgsInterpretationResponse,
     FindingRef,
     FunctionalEffect,
     KnowledgeBaseName,
     KbSourceRef,
     MolecularConsequence,
+    Provenance,
     ReportFormat,
+    SourceBbox,
+    SourceFormat,
+    SourceTier,
     Specimen,
     SpecimenType,
     TrialMatch,
+    ValidationFlag,
     Variant,
     VariantType,
+    _resolve_recommendation_forward_ref,
+)
+from .recommendations import (
+    EvidenceKbSource,
+    EvidenceLink,
+    NonDeviceCdsAttestation,
+    Recommendation,
+    RecommendationDisease,
+    RecommendationDrug,
+    RecommendationPriority,
+    RecommendationType,
 )
 
-__version__ = "0.1.0"
+# Wire NgsInterpretationResponse.recommendations forward-ref to the real type.
+_resolve_recommendation_forward_ref()
+
+__version__ = "0.3.0"
 
 __all__ = [
     "__version__",
@@ -39,16 +62,30 @@ __all__ = [
     "Contraindication",
     "ContraindicationReason",
     "DrugRef",
+    "EvidenceKbSource",
+    "EvidenceLink",
+    "JudgeVerdict",
     "NgsInterpretationResponse",
+    "NonDeviceCdsAttestation",
     "FindingRef",
     "FunctionalEffect",
     "KnowledgeBaseName",
     "KbSourceRef",
     "MolecularConsequence",
+    "Provenance",
+    "Recommendation",
+    "RecommendationDisease",
+    "RecommendationDrug",
+    "RecommendationPriority",
+    "RecommendationType",
     "ReportFormat",
+    "SourceBbox",
+    "SourceFormat",
+    "SourceTier",
     "Specimen",
     "SpecimenType",
     "TrialMatch",
+    "ValidationFlag",
     "Variant",
     "VariantType",
 ]

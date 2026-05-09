@@ -198,6 +198,130 @@ class _Strict(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Provenance — required on every Variant + Biomarker as of v0.2.0
+# ---------------------------------------------------------------------------
+
+SourceTier = Literal[
+    "structured-feed",
+    "tier-0-triage",
+    "tier-1-deterministic",
+    "tier-2-ml-layout",
+    "tier-3-cloud-ocr",
+    "tier-4-vision-llm",
+    "human-curated",
+]
+
+SourceFormat = Literal[
+    "pdf",
+    "xml",
+    "json",
+    "hl7v2",
+    "hl7-fhir",
+    "csv",
+    "manual",
+]
+
+JudgeVerdict = Literal[
+    "agree",
+    "disagree",
+    "missing-variant",
+    "hallucinated-variant",
+    "ambiguous",
+    "not-judged",
+]
+
+ValidationFlag = Literal[
+    "structural-heuristic-fail",
+    "domain-validator-fail",
+    "cross-tier-disagreement",
+    "judge-disagreement",
+    "manual-correction",
+    "low-text-quality",
+    "encrypted-pdf-fallback",
+    "ocr-required",
+]
+
+
+class SourceBbox(BaseModel):
+    """Bounding box in PDF coordinate space."""
+    model_config = ConfigDict(extra="forbid")
+    x0: float
+    y0: float
+    x1: float
+    y1: float
+
+
+class Provenance(_Strict):
+    """Source-tracking metadata required on every extracted finding.
+
+    A Variant or Biomarker emitted to the canonical store without complete
+    provenance is a clinical-safety failure and must be routed to human
+    review. The 5-tier extraction pipeline records which tier produced
+    the finding so a clinical-incident reviewer can reconstruct the path.
+    """
+    source_tier: SourceTier = Field(
+        alias="sourceTier",
+        description=(
+            "Which extraction tier produced this finding. 'structured-feed' "
+            "covers vendor XML/JSON/HL7-FHIR ingestion."
+        ),
+    )
+    source_format: SourceFormat = Field(
+        alias="sourceFormat",
+        description="Format of the source artifact this finding came from.",
+    )
+    source_page: Optional[int] = Field(
+        default=None,
+        alias="sourcePage",
+        ge=1,
+        description="1-indexed page number for PDF sources.",
+    )
+    source_bbox: Optional[SourceBbox] = Field(
+        default=None,
+        alias="sourceBbox",
+        description="Bounding box of the source text region in PDF coordinate space.",
+    )
+    source_text_quote: Optional[str] = Field(
+        default=None,
+        alias="sourceTextQuote",
+        max_length=2000,
+        description=(
+            "Verbatim text quote that supports this finding. Required for any "
+            "finding produced by the LLM tier (Tier 4)."
+        ),
+    )
+    source_section: Optional[str] = Field(
+        default=None,
+        alias="sourceSection",
+        description=(
+            "Vendor-specific section heading (e.g., 'Genomic Findings', "
+            "'Therapies with clinical benefit', 'Variants of Unknown Significance')."
+        ),
+    )
+    extractor_version: Optional[str] = Field(
+        default=None,
+        alias="extractorVersion",
+        description="Identifier for the extractor that produced this finding.",
+    )
+    judge_verdict: Optional[JudgeVerdict] = Field(
+        default=None,
+        alias="judgeVerdict",
+        description="Verdict from the LLM-as-judge gate. 'not-judged' if bypassed.",
+    )
+    confidence: Optional[float] = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+        description="Per-finding confidence from the extracting tier.",
+    )
+    validation_flags: Optional[List[ValidationFlag]] = Field(
+        default=None,
+        alias="validationFlags",
+        description="Validation gate flags raised during extraction.",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Audit envelope
 # ---------------------------------------------------------------------------
 
@@ -341,6 +465,7 @@ class Variant(_Strict):
     germline_or_somatic: Literal["somatic", "germline", "unknown"] = Field(alias="germlineOrSomatic")
     evidence: Optional[EvidenceLevel] = None
     sources: Optional[List[KbSourceRef]] = None
+    provenance: Provenance
 
 
 # ---------------------------------------------------------------------------
@@ -368,6 +493,7 @@ class Biomarker(_Strict):
     score: Optional[str] = None
     evidence: Optional[EvidenceLevel] = None
     sources: Optional[List[KbSourceRef]] = None
+    provenance: Provenance
 
 
 # ---------------------------------------------------------------------------
@@ -376,7 +502,11 @@ class Biomarker(_Strict):
 
 
 class FindingRef(_Strict):
-    ref_type: Literal["variant", "biomarker"] = Field(alias="refType")
+    # 0.3.0: 'cdxFlag' added so Recommendations can reference an existing
+    # CdxFlag finding by its UUID. Backward-compatible: existing
+    # FindingRef instances with refType='variant'|'biomarker' still
+    # validate.
+    ref_type: Literal["variant", "biomarker", "cdxFlag"] = Field(alias="refType")
     ref_id: UUID = Field(alias="refId")
 
 
@@ -500,3 +630,14 @@ class NgsInterpretationResponse(_Strict):
     cdx_flags: List[CdxFlag] = Field(alias="cdxFlags")
     trial_matches: List[TrialMatch] = Field(alias="trialMatches")
     contraindications: List[Contraindication]
+    recommendations: Optional[List["Recommendation"]] = None
+
+
+def _resolve_recommendation_forward_ref():
+    """Late-binding so models.py doesn't import recommendations.py at parse
+    time (recommendations.py imports FindingRef from this module). The
+    package __init__.py calls this once after both modules are loaded."""
+    from .recommendations import Recommendation as _Rec
+    NgsInterpretationResponse.model_rebuild(
+        _types_namespace={"Recommendation": _Rec},
+    )

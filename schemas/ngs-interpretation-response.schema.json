@@ -47,6 +47,13 @@
       "items": {
         "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/contraindication.schema.json"
       }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Engine 2 (CDS) recommendations augmenting this parsed report. Optional — present when Engine 2 has been run against this NgsInterpretationResponse. Output is REFERENCE MATERIAL — explicitly NOT clinical advice. Every recommendation traces to an evidence chain and carries a Non-Device CDS attestation.",
+      "items": {
+        "$ref": "https://schemas.unmiri.com/ngs-interpretation/v0/recommendation.schema.json"
+      }
     }
   }
 }
